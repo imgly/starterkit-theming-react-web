@@ -38,7 +38,8 @@ export { DesignEditorConfig } from './config/plugin';
 export {
   generateColorAbstractionTokensAccent,
   generateColorAbstractionTokensActive,
-  generateColorAbstractionTokensBackground,
+  generateColorAbstractionTokensCanvas,
+  generateColorAbstractionTokensSurface,
   generateStaticTokens
 } from '../app/color';
 

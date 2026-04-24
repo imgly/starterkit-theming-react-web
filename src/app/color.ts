@@ -38,19 +38,20 @@ const transferCL = (from: string, to: string) => {
 // Token Generation Functions
 // ============================================================================
 
-export function generateColorAbstractionTokensBackground(color: string) {
+export function generateColorAbstractionTokensSurface(color: string) {
   return {
-    '--ubq-canvas': chroma(color).css('hsl'),
     '--ubq-elevation-1': setLightness(color, '+0.05').css('hsl'),
     '--ubq-elevation-2': setLightness(color, '+0.1').css('hsl'),
     '--ubq-elevation-3': setLightness(color, '+0.15').css('hsl'),
+    '--ubq-elevation-1-blur': setLightness(color, '+0.05').alpha(0.85).css('hsl'),
+    '--ubq-elevation-2-blur': setLightness(color, '+0.1').alpha(0.85).css('hsl'),
+    '--ubq-elevation-3-blur': setLightness(color, '+0.15').alpha(0.85).css('hsl'),
     '--ubq-foreground-default': getContrastColor(color).alpha(0.9).css('hsl'),
     '--ubq-foreground-light': getContrastColor(color).alpha(0.7).css('hsl'),
     '--ubq-foreground-info': getContrastColor(color).alpha(0.5).css('hsl'),
     '--ubq-interactive-default': setLightness(color, '+0.15').css('hsl'),
     '--ubq-interactive-hover': setLightness(color, '+0.1').css('hsl'),
     '--ubq-interactive-pressed': setLightness(color, '+0.025').css('hsl'),
-    '--ubq-interactive-selected': setLightness(color, '+0.125').css('hsl'),
     '--ubq-input-default': setLightness(color, '-0.1').css('hsl'),
     '--ubq-input-hover': setLightness(color, '-0.12').css('hsl'),
     '--ubq-border-default': setLightness(color, '+0.5').alpha(0.1).css('hsl'),
@@ -66,12 +67,19 @@ export function generateColorAbstractionTokensBackground(color: string) {
   };
 }
 
+export function generateColorAbstractionTokensCanvas(color: string) {
+  return {
+    '--ubq-canvas': chroma(color).css('hsl')
+  };
+}
+
 export function generateColorAbstractionTokensActive(color: string) {
   return {
     '--ubq-foreground-active': chroma(color).alpha(0.9).css('hsl'),
     '--ubq-interactive-active-default': chroma(color).css('hsl'),
     '--ubq-interactive-active-hover': setLightness(color, '+0.05').css('hsl'),
     '--ubq-interactive-active-pressed': setLightness(color, '-0.05').css('hsl'),
+    '--ubq-interactive-selected': chroma(color).css('hsl'),
     '--ubq-notice-info': getContrastColor(
       getContrastColor(color).toString()
     ).css('hsl')
