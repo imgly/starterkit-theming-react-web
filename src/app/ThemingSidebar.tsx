@@ -4,7 +4,7 @@
  * Orchestrates theme controls:
  * - UI Scaling (normal/large)
  * - Theme presets (light/dark)
- * - Custom color pickers (background, active, accent)
+ * - Custom color pickers (surface, canvas, active, accent)
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -13,7 +13,8 @@ import type CreativeEditorSDK from '@cesdk/cesdk-js';
 import {
   generateColorAbstractionTokensAccent,
   generateColorAbstractionTokensActive,
-  generateColorAbstractionTokensBackground,
+  generateColorAbstractionTokensCanvas,
+  generateColorAbstractionTokensSurface,
   generateStaticTokens
 } from './color';
 import { ScaleControl, type Scale } from './ScaleControl';
@@ -28,19 +29,22 @@ interface ThemingSidebarProps {
 
 const THEME_COLORS = {
   light: {
-    backgroundColor: '#D6DBE1',
+    surfaceColor: '#D6DBE1',
+    canvasColor: '#D6DBE1',
     activeColor: '#4E545A',
     accentColor: '#4260F5'
   },
   dark: {
-    backgroundColor: '#121A21',
+    surfaceColor: '#121A21',
+    canvasColor: '#121A21',
     activeColor: '#F5F5F5',
     accentColor: '#415AD3'
   }
 };
 
 const COLOR_PRESETS = {
-  background: ['#DCDFE1', '#230D38', '#242623', '#FCEFEB', '#060709'],
+  surface: ['#DCDFE1', '#230D38', '#242623', '#FCEFEB', '#060709'],
+  canvas: ['#DCDFE1', '#230D38', '#242623', '#FCEFEB', '#060709'],
   active: ['#5D6266', '#D142A3', '#BBC6A4', '#F4BCAC', '#4D5E6D'],
   accent: ['#3E4044', '#66D3EB', '#F6CE4B', '#265E7A', '#D0FDEB']
 };
@@ -48,9 +52,12 @@ const COLOR_PRESETS = {
 export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
   const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
   const [currentScale, setCurrentScale] = useState<Scale>('normal');
-  const [customBackgroundColor, setCustomBackgroundColor] = useState<
-    string | null
-  >(null);
+  const [customSurfaceColor, setCustomSurfaceColor] = useState<string | null>(
+    null
+  );
+  const [customCanvasColor, setCustomCanvasColor] = useState<string | null>(
+    null
+  );
   const [customActiveColor, setCustomActiveColor] = useState<string | null>(
     null
   );
@@ -63,23 +70,31 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
   const getEffectiveColors = useCallback(() => {
     const themeColors = THEME_COLORS[currentTheme];
     return {
-      backgroundColor: customBackgroundColor || themeColors.backgroundColor,
+      surfaceColor: customSurfaceColor || themeColors.surfaceColor,
+      canvasColor: customCanvasColor || themeColors.canvasColor,
       activeColor: customActiveColor || themeColors.activeColor,
       accentColor: customAccentColor || themeColors.accentColor
     };
   }, [
     currentTheme,
-    customBackgroundColor,
+    customSurfaceColor,
+    customCanvasColor,
     customActiveColor,
     customAccentColor
   ]);
 
   // Generate and apply custom theme
   const applyCustomTheme = useCallback(
-    (backgroundColor: string, activeColor: string, accentColor: string) => {
+    (
+      surfaceColor: string,
+      canvasColor: string,
+      activeColor: string,
+      accentColor: string
+    ) => {
       const customTheme = {
         ...generateColorAbstractionTokensAccent(accentColor),
-        ...generateColorAbstractionTokensBackground(backgroundColor),
+        ...generateColorAbstractionTokensSurface(surfaceColor),
+        ...generateColorAbstractionTokensCanvas(canvasColor),
         ...generateColorAbstractionTokensActive(activeColor),
         ...generateStaticTokens()
       };
@@ -112,10 +127,16 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
 
   // Update theme when custom colors change
   useEffect(() => {
-    if (customBackgroundColor || customActiveColor || customAccentColor) {
+    if (
+      customSurfaceColor ||
+      customCanvasColor ||
+      customActiveColor ||
+      customAccentColor
+    ) {
       const colors = getEffectiveColors();
       applyCustomTheme(
-        colors.backgroundColor,
+        colors.surfaceColor,
+        colors.canvasColor,
         colors.activeColor,
         colors.accentColor
       );
@@ -123,7 +144,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
       clearCustomTheme();
     }
   }, [
-    customBackgroundColor,
+    customSurfaceColor,
+    customCanvasColor,
     customActiveColor,
     customAccentColor,
     getEffectiveColors,
@@ -135,7 +157,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
   const handleThemeChange = useCallback(
     (theme: Theme) => {
       setCurrentTheme(theme);
-      setCustomBackgroundColor(null);
+      setCustomSurfaceColor(null);
+      setCustomCanvasColor(null);
       setCustomActiveColor(null);
       setCustomAccentColor(null);
       clearCustomTheme();
@@ -145,7 +168,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
 
   // Handle color changes for each type
   const handleColorChange = useCallback((type: ColorType, color: string) => {
-    if (type === 'background') setCustomBackgroundColor(color);
+    if (type === 'surface') setCustomSurfaceColor(color);
+    if (type === 'canvas') setCustomCanvasColor(color);
     if (type === 'active') setCustomActiveColor(color);
     if (type === 'accent') setCustomAccentColor(color);
   }, []);
@@ -190,14 +214,25 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
       />
 
       <ColorPickerSection
-        label="Background"
-        type="background"
-        currentColor={colors.backgroundColor}
-        presets={COLOR_PRESETS.background}
-        isOpen={openModal === 'background'}
-        onToggle={() => handleModalToggle('background')}
-        onColorChange={(color) => handleColorChange('background', color)}
-        onPresetClick={(color) => handleColorChange('background', color)}
+        label="Surface Background"
+        type="surface"
+        currentColor={colors.surfaceColor}
+        presets={COLOR_PRESETS.surface}
+        isOpen={openModal === 'surface'}
+        onToggle={() => handleModalToggle('surface')}
+        onColorChange={(color) => handleColorChange('surface', color)}
+        onPresetClick={(color) => handleColorChange('surface', color)}
+      />
+
+      <ColorPickerSection
+        label="Canvas Background"
+        type="canvas"
+        currentColor={colors.canvasColor}
+        presets={COLOR_PRESETS.canvas}
+        isOpen={openModal === 'canvas'}
+        onToggle={() => handleModalToggle('canvas')}
+        onColorChange={(color) => handleColorChange('canvas', color)}
+        onPresetClick={(color) => handleColorChange('canvas', color)}
       />
 
       <ColorPickerSection

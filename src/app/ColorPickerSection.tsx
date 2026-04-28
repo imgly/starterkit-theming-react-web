@@ -12,7 +12,7 @@ import classNames from 'classnames';
 
 import styles from './ThemingSidebar.module.css';
 
-export type ColorType = 'background' | 'active' | 'accent';
+export type ColorType = 'surface' | 'canvas' | 'active' | 'accent';
 
 interface ColorPickerSectionProps {
   label: string;
