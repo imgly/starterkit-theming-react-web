@@ -38,7 +38,8 @@ export { DesignEditorConfig } from './config/plugin';
 export {
   generateColorAbstractionTokensAccent,
   generateColorAbstractionTokensActive,
-  generateColorAbstractionTokensBackground,
+  generateColorAbstractionTokensCanvas,
+  generateColorAbstractionTokensSurface,
   generateStaticTokens
 } from '../app/color';
 
@@ -131,5 +132,4 @@ export async function initThemingEditor(cesdk: CreativeEditorSDK) {
       include: ['ly.img.templates.premium.*']
     })
   );
-
 }
