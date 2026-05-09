@@ -9,10 +9,11 @@
     "check:syntax": "tsc --noEmit"
   },
   "dependencies": {
-    "@cesdk/cesdk-js": "latest",
-    "chroma-js": "^2.4.2",
+    "@cesdk/cesdk-js": "^1.75.0-rc.5",
+    "chroma-js": "^2.6.0",
     "classnames": "^2.5.1",
     "react": "^18.3.1",
+    "react-colorful": "^5.6.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
