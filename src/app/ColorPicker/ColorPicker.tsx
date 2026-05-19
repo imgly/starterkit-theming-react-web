@@ -17,6 +17,8 @@ interface IColorPicker {
   positionX?: 'right' | 'left';
   positionY?: 'top' | 'bottom';
   children?: ReactElement<any>;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   onChange: (value: string) => void;
   onChangeDebounced?: () => void;
 }
@@ -48,11 +50,19 @@ export const ColorPicker = ({
   positionY = 'bottom',
   theme = 'dark',
   size = 'sm',
-  presetColors = []
+  presetColors = [],
+  open,
+  onOpenChange
 }: IColorPicker) => {
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const pickerRef = useRef<HTMLDivElement | null>(null);
-  useOnClickOutside(pickerRef, () => pickerOpen && setPickerOpen(false));
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const pickerOpen = isControlled ? open : uncontrolledOpen;
+  const setPickerOpen = (next: boolean) => {
+    if (!isControlled) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  };
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  useOnClickOutside(containerRef, () => pickerOpen && setPickerOpen(false));
 
   const TriggerComponent = children ? (
     children
@@ -82,6 +92,7 @@ export const ColorPicker = ({
 
   return (
     <div
+      ref={containerRef}
       className={classNames(
         'gap-xs flex items-center justify-between',
         classes.wrapper,
@@ -111,7 +122,7 @@ export const ColorPicker = ({
         )}
         {cloneElement(TriggerComponent, {
           onClick: (e: Event) => {
-            setPickerOpen(true);
+            setPickerOpen(!pickerOpen);
             e.stopPropagation();
           }
         })}
@@ -126,7 +137,6 @@ export const ColorPicker = ({
             classes[`pickerModal--${positionX}`],
             classes[`pickerModal--${positionY}`]
           )}
-          ref={pickerRef}
         >
           <HexAlphaColorPicker color={value} onChange={handleChange} />
           <div className={'flex space-x-2'}>

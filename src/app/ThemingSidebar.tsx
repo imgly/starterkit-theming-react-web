@@ -66,6 +66,14 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
   const [customAccentColor, setCustomAccentColor] = useState<string | null>(
     null
   );
+  const [openPicker, setOpenPicker] = useState<ColorType | null>(null);
+
+  const handlePickerOpenChange = useCallback(
+    (type: ColorType, isOpen: boolean) => {
+      setOpenPicker(isOpen ? type : (prev) => (prev === type ? null : prev));
+    },
+    []
+  );
 
   // Get effective colors (custom or theme defaults)
   const getEffectiveColors = useCallback(() => {
@@ -198,6 +206,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
         name="surfaceColor"
         value={colors.surfaceColor}
         presetColors={COLOR_PRESETS.surface}
+        open={openPicker === 'surface'}
+        onOpenChange={(isOpen) => handlePickerOpenChange('surface', isOpen)}
         onChange={(color) => handleColorChange('surface', color)}
       />
 
@@ -206,6 +216,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
         name="canvasColor"
         value={colors.canvasColor}
         presetColors={COLOR_PRESETS.canvas}
+        open={openPicker === 'canvas'}
+        onOpenChange={(isOpen) => handlePickerOpenChange('canvas', isOpen)}
         onChange={(color) => handleColorChange('canvas', color)}
       />
 
@@ -214,6 +226,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
         name="activeColor"
         value={colors.activeColor}
         presetColors={COLOR_PRESETS.active}
+        open={openPicker === 'active'}
+        onOpenChange={(isOpen) => handlePickerOpenChange('active', isOpen)}
         onChange={(color) => handleColorChange('active', color)}
       />
 
@@ -222,6 +236,8 @@ export function ThemingSidebar({ cesdk }: ThemingSidebarProps) {
         name="accentColor"
         value={colors.accentColor}
         presetColors={COLOR_PRESETS.accent}
+        open={openPicker === 'accent'}
+        onOpenChange={(isOpen) => handlePickerOpenChange('accent', isOpen)}
         onChange={(color) => handleColorChange('accent', color)}
       />
     </div>

@@ -9,10 +9,11 @@
  * @see https://img.ly/docs/cesdk/js/configuration-2c1c3d/
  */
 
-import CreativeEditorSDK from '@cesdk/cesdk-js';
+import type CreativeEditorSDK from '@cesdk/cesdk-js';
 
 import {
   BlurAssetSource,
+  ImageColorsAssetSource,
   ColorPaletteAssetSource,
   CropPresetsAssetSource,
   DemoAssetSources,
@@ -83,6 +84,7 @@ export async function initThemingEditor(cesdk: CreativeEditorSDK) {
   await cesdk.addPlugin(new BlurAssetSource());
 
   // Color palettes for design
+  await cesdk.addPlugin(new ImageColorsAssetSource());
   await cesdk.addPlugin(new ColorPaletteAssetSource());
 
   // Crop presets (aspect ratios)
