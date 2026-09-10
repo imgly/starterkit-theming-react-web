@@ -14,6 +14,7 @@ import { ThemingSidebar } from './ThemingSidebar';
 
 import styles from './App.module.css';
 
+
 interface AppProps {
   editorConfig: Configuration;
 }
