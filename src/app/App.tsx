@@ -14,6 +14,7 @@ import { ThemingSidebar } from './ThemingSidebar';
 
 import styles from './App.module.css';
 
+
 interface AppProps {
   editorConfig: Configuration;
 }
@@ -32,7 +33,7 @@ export function App({ editorConfig }: AppProps) {
     // Scene Loading
     // ============================================================================
 
-    await instance.loadFromURL(resolveAssetPath('/assets/example-1.scene'));
+    await instance.load(resolveAssetPath('/assets/example-1.scene'));
 
     setCesdk(instance);
   }, []);
