@@ -17,7 +17,6 @@ export const editorConfig: Configuration = {
   userId: 'starterkit-theming-user',
 
   // Local assets for development
-  
 
 };
 
