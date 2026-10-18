@@ -4,12 +4,12 @@
  * Provides layout with theme controls sidebar and editor.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import CreativeEditorSDK, { type Configuration } from '@cesdk/cesdk-js';
 import { CreativeEditor } from '@cesdk/cesdk-js/react';
 
 import { initThemingEditor } from '../imgly';
-import { DEMO_ASSETS_BASE_URL } from '../imgly/demo-assets';
+import { resolveAssetPath } from '../imgly/resolveAssetPath';
 import { ThemingSidebar } from './ThemingSidebar';
 
 import styles from './App.module.css';
@@ -23,6 +23,8 @@ export function App({ editorConfig }: AppProps) {
   const [cesdk, setCesdk] = useState<CreativeEditorSDK | null>(null);
 
   const handleEditorInit = useCallback(async (instance: CreativeEditorSDK) => {
+    // Debug access (remove in production)
+    (window as unknown as { cesdk: CreativeEditorSDK }).cesdk = instance;
 
     // Initialize the theming editor
     await initThemingEditor(instance);
@@ -31,7 +33,7 @@ export function App({ editorConfig }: AppProps) {
     // Scene Loading
     // ============================================================================
 
-    await instance.load(`${DEMO_ASSETS_BASE_URL}/assets/example-1.scene`);
+    await instance.load(resolveAssetPath('/assets/example-1.scene'));
 
     setCesdk(instance);
   }, []);
