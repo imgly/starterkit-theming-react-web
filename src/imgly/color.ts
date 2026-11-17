@@ -68,7 +68,6 @@ export function generateColorAbstractionTokensSurface(color: string) {
       .alpha(0.25)
       .css('hsl'),
     '--ubq-focus-outline': chroma(color).css('hsl'),
-    '--ubq-overlay-default': chroma(color).alpha(0.8).css('hsl'),
     '--ubq-progress': getContrastColor(color).alpha(0.7).css('hsl')
   };
 }
